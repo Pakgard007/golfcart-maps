@@ -1,7 +1,7 @@
 # golfcart-maps — แผนที่ point cloud ของรถกอล์ฟ
 
-แผนที่ 3 มิติ (`.pcd`) ที่ทำด้วย **1Mapping** (LIO-SAM + Ouster OS-1-128) และใช้ใน
-**2Localize_get_path** สำหรับ NDT localization
+แผนที่ 3 มิติ (`.pcd`) ที่ทำด้วย **[Mapping](https://github.com/Pakgard007/Mapping)** (LIO-SAM + Ouster OS-1-128) และใช้ใน
+**[Localize_get_path](https://github.com/Pakgard007/Localize_get_path)** สำหรับ NDT localization
 
 ไฟล์แผนที่ใหญ่เกินที่ git รับ (100MB) จึงอยู่ในหน้า **[Releases](../../releases)** ของ repo นี้
 บีบอัดด้วย `zstd`
