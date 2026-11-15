@@ -1,42 +1,51 @@
 # golfcart-maps — แผนที่ point cloud ของรถกอล์ฟ
 
-แผนที่ 3 มิติ (`.pcd`) ที่ทำด้วย **[Mapping](https://github.com/Pakgard007/Mapping)** (LIO-SAM + Ouster OS-1-128) และใช้ใน
-**[Localize_get_path](https://github.com/Pakgard007/Localize_get_path)** สำหรับ NDT localization
+แผนที่ 3 มิติ (`.pcd`) ที่ทำด้วย **[Mapping](https://github.com/Pakgard007/Mapping)** (LIO-SAM + Ouster OS-1-128)
+และใช้ใน **[Localize_get_path](https://github.com/Pakgard007/Localize_get_path)** สำหรับ NDT localization
 
-ไฟล์แผนที่ใหญ่เกินที่ git รับ (100MB) จึงอยู่ในหน้า **[Releases](../../releases)** ของ repo นี้
-บีบอัดด้วย `zstd`
+## 🗺️ แผนที่
 
-## ไฟล์
-
-| ไฟล์ | จุด | ขนาด (.pcd) | สถานะ |
+| ไฟล์ | จุด | ขนาด | หมายเหตุ |
 |---|---|---|---|
-| `FullGlobalMap.pcd.zst` | 36,278,984 | 554 MB | **ใช้อยู่** — เกือบทั้งมหาวิทยาลัย (ตั้งแต่ 2026-11-10) |
-| `GlobalMapLoop1.pcd.zst` | 5,841,778 | 90 MB | เลิกใช้ |
-| `GlobalMapLoop2.pcd.zst` | 14,552,700 | 223 MB | เลิกใช้ |
+| `FullGlobalMap.pcd` | 36,278,984 | 554 MB | เกือบทั้ง มจธ. บางมด (ใช้ตั้งแต่ 2026-11-10) · `FIELDS x y z intensity` · `DATA binary` |
 
-ทุกไฟล์: `FIELDS x y z intensity`, `DATA binary`
+GitHub รับไฟล์ละไม่เกิน 100 MB แผนที่จึงถูกแบ่งเป็น 6 ชิ้นในโฟลเดอร์ [`FullGlobalMap/`](FullGlobalMap)
+ต้องโหลดมาแล้วต่อกลับเป็นไฟล์เดียวก่อนใช้
 
-## วิธีใช้
+## 📥 วิธีโหลดและต่อไฟล์
 
 ```bash
-# โหลด FullGlobalMap.pcd.zst จากหน้า Releases แล้ว
-sudo apt install -y zstd
-zstd -d FullGlobalMap.pcd.zst -o ~/2Localize_get_path/src/FullGlobalMap.pcd
-
-# แผนที่เก่า (ถ้าต้องใช้) วางที่ src/old_maps/ — ดู src/old_maps/README.md ใน 2Localize_get_path
+git clone https://github.com/Pakgard007/golfcart-maps.git
+cd golfcart-maps
+cat FullGlobalMap/FullGlobalMap.pcd.part-* > FullGlobalMap.pcd
+sha256sum FullGlobalMap.pcd      # ต้องตรงกับค่าด้านล่าง
+cp FullGlobalMap.pcd ~/2Localize_get_path/src/
 ```
 
-จากนั้นตรวจว่า `map_path` ใน `src/lidar_localization_ros2-main/param/localization.yaml`
-ชี้ไปที่ไฟล์นี้
+<details>
+<summary>Windows</summary>
 
-## ตรวจไฟล์ (SHA-256 ของ .pcd หลังแตกไฟล์)
+```bat
+copy /b FullGlobalMap\FullGlobalMap.pcd.part-00+FullGlobalMap\FullGlobalMap.pcd.part-01+FullGlobalMap\FullGlobalMap.pcd.part-02+FullGlobalMap\FullGlobalMap.pcd.part-03+FullGlobalMap\FullGlobalMap.pcd.part-04+FullGlobalMap\FullGlobalMap.pcd.part-05 FullGlobalMap.pcd
+certutil -hashfile FullGlobalMap.pcd SHA256
+```
+
+</details>
+
+จากนั้นตรวจว่า `map_path` ใน `src/lidar_localization_ros2-main/param/localization.yaml`
+(ใน Localize_get_path) ชี้ไปที่ไฟล์นี้
+
+## ✅ SHA-256
 
 ```text
 5d3635d808791e549001de5ddff36187ab066f947e983ecf3edd007d8389236a  FullGlobalMap.pcd
-c08a1fb12423e630d2ade56be710630358d7bf5f961dd8577de57a038a896d65  GlobalMapLoop1.pcd
-bd616b698ca3eb24c0ac3ae094f6277eb3b27d3b5eab26cdf8e8adb0fac31699  GlobalMapLoop2.pcd
 ```
 
+## 🔁 เพิ่มแผนที่ใหม่
+
 ```bash
-sha256sum FullGlobalMap.pcd
+mkdir NewMap
+split -b 95M -d -a 2 NewMap.pcd NewMap/NewMap.pcd.part-
+sha256sum NewMap.pcd             # ใส่ค่าลง README
+git add NewMap && git commit -m "Add NewMap" && git push
 ```

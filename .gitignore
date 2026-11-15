@@ -1,1 +1,3 @@
 release/
+*.pcd
+*.pcd.zst
