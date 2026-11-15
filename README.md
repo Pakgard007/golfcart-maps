@@ -3,6 +3,7 @@
 แผนที่ 3 มิติ (`.pcd`) ที่ทำด้วย **[Mapping](https://github.com/Pakgard007/Mapping)** (LIO-SAM + Ouster OS-1-128)
 และใช้ใน **[Localize_get_path](https://github.com/Pakgard007/Localize_get_path)** สำหรับ NDT localization
 
+> 🇬🇧 **English:** 3D point cloud map of the KMUTT Bangmod campus (36M points) built with LIO-SAM. Split into 95 MB parts to fit GitHub's file limit — join them with `cat FullGlobalMap/FullGlobalMap.pcd.part-* > FullGlobalMap.pcd`.
 ## 🗺️ แผนที่
 
 | ไฟล์ | จุด | ขนาด | หมายเหตุ |
